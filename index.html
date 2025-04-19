@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloader Ninja | Download Videos from YouTube, Instagram, Facebook, TikTok & More</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+        }
+        .platform-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .download-btn {
+            transition: all 0.3s ease;
+        }
+        .download-btn:hover {
+            transform: scale(1.05);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .loader {
+            border-top-color: #a777e3;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Mobile-specific adjustments */
+        @media (max-width: 640px) {
+            .mobile-stack {
+                flex-direction: column;
+            }
+            .mobile-px-2 {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+            .mobile-py-3 {
+                padding-top: 0.75rem;
+                padding-bottom: 0.75rem;
+            }
+            .mobile-text-lg {
+                font-size: 1.125rem;
+            }
+            .mobile-w-full {
+                width: 100%;
+            }
+            .mobile-mb-4 {
+                margin-bottom: 1rem;
+            }
+            .mobile-mt-2 {
+                margin-top: 0.5rem;
+            }
+            .mobile-space-y-4 > * + * {
+                margin-top: 1rem;
+            }
+            .mobile-flex-col {
+                flex-direction: column;
+            }
+            .mobile-p-4 {
+                padding: 1rem;
+            }
+            .mobile-text-sm {
+                font-size: 0.875rem;
+            }
+            .mobile-text-xl {
+                font-size: 1.25rem;
+            }
+            .mobile-text-2xl {
+                font-size: 1.5rem;
+            }
+            .mobile-text-3xl {
+                font-size: 1.875rem;
+            }
+            .mobile-gap-2 {
+                gap: 0.5rem;
+            }
+            .mobile-p-2 {
+                padding: 0.5rem;
+            }
+            .mobile-px-3 {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+            .mobile-py-2 {
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4 md:py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center mobile-stack">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <img src="site_logo.png" alt="Downloader Ninja Logo" class="h-14 md:h-20 mr-2">
+                    <h1 class="text-xl md:text-3xl font-bold mobile-text-xl">Downloader Ninja</h1>
+                </div>
+                <nav class="flex flex-wrap justify-center gap-1 md:gap-4 mobile-gap-2">
+                    <a href="#home" class="px-2 py-1 md:px-3 md:py-2 rounded hover:bg-white hover:bg-opacity-20 transition mobile-px-2 mobile-py-1 mobile-text-sm">Home</a>
+                    <a href="#features" class="px-2 py-1 md:px-3 md:py-2 rounded hover:bg-white hover:bg-opacity-20 transition mobile-px-2 mobile-py-1 mobile-text-sm">Features</a>
+                    <a href="#how-it-works" class="px-2 py-1 md:px-3 md:py-2 rounded hover:bg-white hover:bg-opacity-20 transition mobile-px-2 mobile-py-1 mobile-text-sm">How It Works</a>
+                    <a href="#faq" class="px-2 py-1 md:px-3 md:py-2 rounded hover:bg-white hover:bg-opacity-20 transition mobile-px-2 mobile-py-1 mobile-text-sm">FAQ</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="gradient-bg text-white py-8 md:py-16">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row items-center mobile-stack">
+                    <div class="md:w-1/2 mb-8 md:mb-0">
+                        <h2 class="text-2xl md:text-5xl font-bold mb-4 mobile-text-2xl">Download Videos from Any Platform</h2>
+                        <p class="text-lg md:text-xl mb-6 mobile-text-lg">Fast, free and unlimited downloads from YouTube, Instagram, Facebook, TikTok, Twitter and more!</p>
+                        
+                        <div class="bg-white rounded-lg p-1 flex mobile-flex-col">
+                            <input type="text" id="video-url" placeholder="Paste video URL here..." class="flex-grow px-4 py-3 text-gray-800 focus:outline-none rounded-l md:rounded-r-none mobile-w-full mobile-rounded mobile-mb-0 mobile-mb-2">
+                            <button id="download-btn" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-r md:rounded-l-none font-medium transition mobile-w-full mobile-rounded">
+                                <i class="fas fa-download mr-2"></i> Download
+                            </button>
+                        </div>
+                        
+                        <div class="mt-4 flex flex-wrap gap-2 mobile-gap-1">
+                            <span class="text-xs md:text-sm bg-white bg-opacity-20 px-2 py-1 md:px-3 md:py-1 rounded-full">YouTube</span>
+                            <span class="text-xs md:text-sm bg-white bg-opacity-20 px-2 py-1 md:px-3 md:py-1 rounded-full">Instagram</span>
+                            <span class="text-xs md:text-sm bg-white bg-opacity-20 px-2 py-1 md:px-3 md:py-1 rounded-full">Facebook</span>
+                            <span class="text-xs md:text-sm bg-white bg-opacity-20 px-2 py-1 md:px-3 md:py-1 rounded-full">TikTok</span>
+                            <span class="text-xs md:text-sm bg-white bg-opacity-20 px-2 py-1 md:px-3 md:py-1 rounded-full">Twitter</span>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 flex justify-center mt-6 md:mt-0">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3176/3176272.png" alt="Download Illustration" class="w-full max-w-xs md:max-w-md">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Supported Platforms -->
+        <section class="py-8 md:py-12 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 mobile-text-2xl">Supported Platforms</h2>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+                    <!-- YouTube Card -->
+                    <div class="platform-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                        <div class="bg-red-600 p-4 flex justify-center">
+                            <i class="fab fa-youtube text-white text-4xl md:text-5xl"></i>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-base md:text-lg mb-2">YouTube</h3>
+                            <ul class="text-gray-600 text-xs md:text-sm space-y-1">
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Videos (4K, HD, SD)</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Shorts</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Playlists</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Thumbnails</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Instagram Card -->
+                    <div class="platform-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                        <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-4 flex justify-center">
+                            <i class="fab fa-instagram text-white text-4xl md:text-5xl"></i>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-base md:text-lg mb-2">Instagram</h3>
+                            <ul class="text-gray-600 text-xs md:text-sm space-y-1">
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Posts</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Reels</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Stories</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> IGTV</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Facebook Card -->
+                    <div class="platform-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                        <div class="bg-blue-600 p-4 flex justify-center">
+                            <i class="fab fa-facebook text-white text-4xl md:text-5xl"></i>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-base md:text-lg mb-2">Facebook</h3>
+                            <ul class="text-gray-600 text-xs md:text-sm space-y-1">
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Videos</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Reels</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Posts</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Stories</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- TikTok Card -->
+                    <div class="platform-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                        <div class="bg-black p-4 flex justify-center">
+                            <i class="fab fa-tiktok text-white text-4xl md:text-5xl"></i>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-base md:text-lg mb-2">TikTok</h3>
+                            <ul class="text-gray-600 text-xs md:text-sm space-y-1">
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Videos (HD)</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Without watermark</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> With sound</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Twitter Card -->
+                    <div class="platform-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                        <div class="bg-blue-400 p-4 flex justify-center">
+                            <i class="fab fa-twitter text-white text-4xl md:text-5xl"></i>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-base md:text-lg mb-2">Twitter</h3>
+                            <ul class="text-gray-600 text-xs md:text-sm space-y-1">
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Videos</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> GIFs</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Images</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section id="features" class="py-8 md:py-12 bg-gray-100">
+            <div class="container mx-auto px-4">
+                <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 mobile-text-2xl">Powerful Features</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+                    <div class="bg-white p-4 md:p-6 rounded-lg shadow-md">
+                        <div class="text-purple-600 mb-3">
+                            <i class="fas fa-bolt text-3xl md:text-4xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg md:text-xl mb-2 mobile-text-lg">Fast Downloads</h3>
+                        <p class="text-gray-600 text-sm md:text-base">Our high-speed servers ensure your downloads complete in seconds, no matter the file size.</p>
+                    </div>
+                    
+                    <div class="bg-white p-4 md:p-6 rounded-lg shadow-md">
+                        <div class="text-purple-600 mb-3">
+                            <i class="fas fa-lock text-3xl md:text-4xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg md:text-xl mb-2 mobile-text-lg">Secure & Private</h3>
+                        <p class="text-gray-600 text-sm md:text-base">We don't store your downloads or track your activity. Your privacy is our priority.</p>
+                    </div>
+                    
+                    <div class="bg-white p-4 md:p-6 rounded-lg shadow-md">
+                        <div class="text-purple-600 mb-3">
+                            <i class="fas fa-mobile-alt text-3xl md:text-4xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg md:text-xl mb-2 mobile-text-lg">Mobile Friendly</h3>
+                        <p class="text-gray-600 text-sm md:text-base">Works perfectly on all devices. Download directly to your phone or tablet.</p>
+                    </div>
+                    
+                    <div class="bg-white p-4 md:p-6 rounded-lg shadow-md">
+                        <div class="text-purple-600 mb-3">
+                            <i class="fas fa-tasks text-3xl md:text-4xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg md:text-xl mb-2 mobile-text-lg">Multiple Formats</h3>
+                        <p class="text-gray-600 text-sm md:text-base">Download in MP4, MP3, WEBM, and more. Choose the quality that fits your needs.</p>
+                    </div>
+                    
+                    <div class="bg-white p-4 md:p-6 rounded-lg shadow-md">
+                        <div class="text-purple-600 mb-3">
+                            <i class="fas fa-infinity text-3xl md:text-4xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg md:text-xl mb-2 mobile-text-lg">Unlimited Downloads</h3>
+                        <p class="text-gray-600 text-sm md:text-base">No restrictions on how many videos you can download. It's completely free!</p>
+                    </div>
+                    
+                    <div class="bg-white p-4 md:p-6 rounded-lg shadow-md">
+                        <div class="text-purple-600 mb-3">
+                            <i class="fas fa-cloud text-3xl md:text-4xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg md:text-xl mb-2 mobile-text-lg">Cloud Storage</h3>
+                        <p class="text-gray-600 text-sm md:text-base">Optionally save your downloads directly to Google Drive or Dropbox.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section id="how-it-works" class="py-8 md:py-12 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 mobile-text-2xl">How It Works</h2>
+                
+                <div class="flex flex-col md:flex-row items-center mb-8 md:mb-12 mobile-stack">
+                    <div class="md:w-1/2 mb-6 md:mb-0 md:pr-8">
+                        <h3 class="text-xl md:text-2xl font-bold mb-3 mobile-text-xl">1. Paste the URL</h3>
+                        <p class="text-gray-600 mb-3 text-sm md:text-base">Copy the link of the video you want to download from YouTube, Instagram, Facebook, TikTok, or Twitter.</p>
+                        <p class="text-gray-600 text-sm md:text-base">Our downloader supports all major platforms and their various content types (videos, shorts, reels, stories, etc.).</p>
+                    </div>
+                    <div class="md:w-1/2 bg-gray-100 p-4 md:p-6 rounded-lg mobile-w-full">
+                        <div class="bg-white p-3 md:p-4 rounded border border-gray-200">
+                            <div class="flex items-center mb-2">
+                                <div class="w-2 h-2 md:w-3 md:h-3 rounded-full bg-red-500 mr-2"></div>
+                                <div class="w-2 h-2 md:w-3 md:h-3 rounded-full bg-yellow-500 mr-2"></div>
+                                <div class="w-2 h-2 md:w-3 md:h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <div class="bg-gray-100 p-2 md:p-3 rounded text-xs md:text-sm font-mono text-gray-800">
+                                https://www.youtube.com/watch?v=dQw4w9WgXcQ
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col md:flex-row-reverse items-center mb-8 md:mb-12 mobile-stack">
+                    <div class="md:w-1/2 mb-6 md:mb-0 md:pl-8">
+                        <h3 class="text-xl md:text-2xl font-bold mb-3 mobile-text-xl">2. Choose Format & Quality</h3>
+                        <p class="text-gray-600 mb-3 text-sm md:text-base">Select your preferred format (MP4, MP3, etc.) and quality (4K, HD, SD).</p>
+                        <p class="text-gray-600 text-sm md:text-base">For audio, you can choose between different bitrates. For video, select resolution and codec options.</p>
+                    </div>
+                    <div class="md:w-1/2 bg-gray-100 p-4 md:p-6 rounded-lg mobile-w-full">
+                        <div class="bg-white p-3 md:p-4 rounded border border-gray-200">
+                            <h4 class="font-bold mb-2 md:mb-3 text-base md:text-lg">Download Options</h4>
+                            <div class="space-y-2 md:space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="font-medium text-sm md:text-base">MP4 1080p</span>
+                                        <span class="text-xs text-gray-500 block">1920x1080 • 60fps</span>
+                                    </div>
+                                    <button class="bg-purple-600 text-white px-2 py-1 md:px-3 md:py-1 rounded text-xs md:text-sm">Download</button>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="font-medium text-sm md:text-base">MP4 720p</span>
+                                        <span class="text-xs text-gray-500 block">1280x720 • 30fps</span>
+                                    </div>
+                                    <button class="bg-purple-600 text-white px-2 py-1 md:px-3 md:py-1 rounded text-xs md:text-sm">Download</button>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="font-medium text-sm md:text-base">MP3 320kbps</span>
+                                        <span class="text-xs text-gray-500 block">High Quality Audio</span>
+                                    </div>
+                                    <button class="bg-purple-600 text-white px-2 py-1 md:px-3 md:py-1 rounded text-xs md:text-sm">Download</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col md:flex-row items-center mobile-stack">
+                    <div class="md:w-1/2 mb-6 md:mb-0 md:pr-8">
+                        <h3 class="text-xl md:text-2xl font-bold mb-3 mobile-text-xl">3. Download & Enjoy</h3>
+                        <p class="text-gray-600 mb-3 text-sm md:text-base">Click the download button and save the file to your device.</p>
+                        <p class="text-gray-600 text-sm md:text-base">Your download will start immediately. No waiting, no registration required!</p>
+                    </div>
+                    <div class="md:w-1/2 bg-gray-100 p-4 md:p-6 rounded-lg mobile-w-full">
+                        <div class="bg-white p-3 md:p-4 rounded border border-gray-200 text-center">
+                            <i class="fas fa-cloud-download-alt text-4xl md:text-5xl text-purple-600 mb-3 md:mb-4"></i>
+                            <h4 class="font-bold mb-1 md:mb-2 text-base md:text-lg">Download Complete!</h4>
+                            <p class="text-gray-600 mb-3 md:mb-4 text-sm md:text-base">Your file is ready to be saved.</p>
+                            <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-1 md:px-6 md:py-2 rounded-full font-medium transition text-sm md:text-base">
+                                <i class="fas fa-save mr-2"></i> Save to Device
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section (Hidden by default) -->
+        <section id="results-section" class="py-8 md:py-12 bg-gray-100 hidden">
+            <div class="container mx-auto px-4">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden max-w-4xl mx-auto">
+                    <div class="p-4 md:p-6 border-b border-gray-200">
+                        <h2 class="text-xl md:text-2xl font-bold flex items-center">
+                            <i class="fab fa-youtube text-red-600 mr-2 md:mr-3 text-lg md:text-xl"></i>
+                            <span id="video-title" class="text-base md:text-xl">Never Gonna Give You Up - Rick Astley</span>
+                        </h2>
+                    </div>
+                    
+                    <div class="p-4 md:p-6">
+                        <div class="flex flex-col md:flex-row gap-4 md:gap-6 mb-6 md:mb-8">
+                            <div class="md:w-1/3">
+                                <div class="bg-gray-200 rounded-lg overflow-hidden aspect-video">
+                                    <img id="video-thumbnail" src="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Video Thumbnail" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                            <div class="md:w-2/3">
+                                <div class="mb-3 md:mb-4">
+                                    <label class="block font-medium mb-1 md:mb-2 text-sm md:text-base">Select Format:</label>
+                                    <div class="flex flex-wrap gap-1 md:gap-2">
+                                        <button class="format-btn active bg-purple-600 text-white px-3 py-1 md:px-4 md:py-2 rounded text-xs md:text-sm">MP4</button>
+                                        <button class="format-btn bg-gray-200 hover:bg-gray-300 px-3 py-1 md:px-4 md:py-2 rounded text-xs md:text-sm">MP3</button>
+                                        <button class="format-btn bg-gray-200 hover:bg-gray-300 px-3 py-1 md:px-4 md:py-2 rounded text-xs md:text-sm">WEBM</button>
+                                        <button class="format-btn bg-gray-200 hover:bg-gray-300 px-3 py-1 md:px-4 md:py-2 rounded text-xs md:text-sm">M4A</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3 md:mb-4">
+                                    <label class="block font-medium mb-1 md:mb-2 text-sm md:text-base">Select Quality:</label>
+                                    <div class="flex flex-wrap gap-1 md:gap-2" id="quality-options">
+                                        <!-- Quality options will be populated here -->
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center text-sm md:text-base">
+                                    <input type="checkbox" id="subtitles" class="mr-2">
+                                    <label for="subtitles">Include Subtitles (if available)</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 pt-4 md:pt-6">
+                            <button id="final-download-btn" class="download-btn w-full bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 md:px-8 md:py-3 rounded-lg font-medium transition flex items-center justify-center text-sm md:text-base">
+                                <i class="fas fa-download mr-2"></i> Download Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq" class="py-8 md:py-12 bg-white">
+            <div class="container mx-auto px-4 max-w-4xl">
+                <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 mobile-text-2xl">Frequently Asked Questions</h2>
+                
+                <div class="space-y-3 md:space-y-4">
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <button class="faq-question w-full text-left p-3 md:p-4 bg-gray-50 hover:bg-gray-100 transition font-medium flex justify-between items-center text-sm md:text-base">
+                            <span>Is this downloader free to use?</span>
+                            <i class="fas fa-chevron-down transition-transform duration-300 text-xs md:text-sm"></i>
+                        </button>
+                        <div class="faq-answer p-3 md:p-4 border-t border-gray-200 hidden text-sm md:text-base">
+                            <p class="text-gray-600">Yes, our service is completely free to use with no hidden charges. You can download as many videos as you want without any limitations.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <button class="faq-question w-full text-left p-3 md:p-4 bg-gray-50 hover:bg-gray-100 transition font-medium flex justify-between items-center text-sm md:text-base">
+                            <span>What video qualities are available?</span>
+                            <i class="fas fa-chevron-down transition-transform duration-300 text-xs md:text-sm"></i>
+                        </button>
+                        <div class="faq-answer p-3 md:p-4 border-t border-gray-200 hidden text-sm md:text-base">
+                            <p class="text-gray-600">Available qualities depend on the source video. We typically offer all available resolutions from 144p up to 4K (when available), as well as various audio quality options for MP3 downloads.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <button class="faq-question w-full text-left p-3 md:p-4 bg-gray-50 hover:bg-gray-100 transition font-medium flex justify-between items-center text-sm md:text-base">
+                            <span>Can I download private or age-restricted videos?</span>
+                            <i class="fas fa-chevron-down transition-transform duration-300 text-xs md:text-sm"></i>
+                        </button>
+                        <div class="faq-answer p-3 md:p-4 border-t border-gray-200 hidden text-sm md:text-base">
+                            <p class="text-gray-600">No, our service can only download publicly available content. Private, unlisted, or age-restricted videos that require login cannot be downloaded.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <button class="faq-question w-full text-left p-3 md:p-4 bg-gray-50 hover:bg-gray-100 transition font-medium flex justify-between items-center text-sm md:text-base">
+                            <span>How long are downloaded files stored?</span>
+                            <i class="fas fa-chevron-down transition-transform duration-300 text-xs md:text-sm"></i>
+                        </button>
+                        <div class="faq-answer p-3 md:p-4 border-t border-gray-200 hidden text-sm md:text-base">
+                            <p class="text-gray-600">We don't store any downloaded files on our servers. The files are generated on-demand and immediately served to you for download. Once you've downloaded the file, it's only stored on your device.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <button class="faq-question w-full text-left p-3 md:p-4 bg-gray-50 hover:bg-gray-100 transition font-medium flex justify-between items-center text-sm md:text-base">
+                            <span>Is it legal to download videos using this service?</span>
+                            <i class="fas fa-chevron-down transition-transform duration-300 text-xs md:text-sm"></i>
+                        </button>
+                        <div class="faq-answer p-3 md:p-4 border-t border-gray-200 hidden text-sm md:text-base">
+                            <p class="text-gray-600">The legality of downloading videos depends on copyright laws in your country and how you intend to use the downloaded content. We recommend only downloading videos you have permission to download or that are in the public domain.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-6 md:py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center mobile-stack">
+                <div class="mb-6 md:mb-0 text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start mb-3 md:mb-4">
+                    
+                        <img src="site_logo.png" alt="Downloader Ninja Logo" class="h-12 md:h-16 mr-2">
+                        <span class="text-lg md:text-xl font-bold">Downloader Ninja</span>
+                        
+                    </div>
+                    <p class="text-gray-400 text-sm md:text-base">The fastest way to download videos from any platform.</p>
+                </div>
+                
+                <div class="flex space-x-4 md:space-x-6 mb-6 md:mb-0">
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-facebook-f text-lg md:text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-twitter text-lg md:text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-instagram text-lg md:text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-github text-lg md:text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-6 md:mt-8 pt-6 md:pt-8 flex flex-col md:flex-row justify-between mobile-stack">
+                <div class="mb-4 md:mb-0 text-center md:text-left">
+                    <p class="text-gray-400 text-xs md:text-sm">&copy; 2025 Downloader Ninja. All rights reserved.</p>
+                </div>
+                
+                <div class="flex flex-wrap justify-center gap-3 md:gap-6 text-xs md:text-sm">
+                    <a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">DMCA</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Modal -->
+    <div id="loading-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 md:p-8 rounded-lg max-w-xs md:max-w-md w-full text-center mx-4">
+            <div class="flex justify-center mb-3 md:mb-4">
+                <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-10 w-10 md:h-12 md:w-12"></div>
+            </div>
+            <h3 class="text-base md:text-lg font-medium mb-2">Processing Your Request</h3>
+            <p class="text-gray-600 text-sm md:text-base">We're fetching the video information. This usually takes just a few seconds...</p>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality for format selection
+        document.querySelectorAll('.format-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.format-btn').forEach(b => b.classList.remove('active', 'bg-purple-600', 'text-white'));
+                document.querySelectorAll('.format-btn').forEach(b => b.classList.add('bg-gray-200', 'hover:bg-gray-300'));
+                this.classList.add('active', 'bg-purple-600', 'text-white');
+                this.classList.remove('bg-gray-200', 'hover:bg-gray-300');
+                
+                // Update quality options based on format
+                updateQualityOptions(this.textContent.trim());
+            });
+        });
+
+        // Function to update quality options based on selected format
+        function updateQualityOptions(format) {
+            const qualityContainer = document.getElementById('quality-options');
+            qualityContainer.innerHTML = '';
+            
+            if (format === 'MP4') {
+                const qualities = [
+                    { res: '4K', label: '2160p (4K)', fps: '60fps', size: '~500MB' },
+                    { res: '1440p', label: '1440p (QHD)', fps: '60fps', size: '~300MB' },
+                    { res: '1080p', label: '1080p (Full HD)', fps: '60fps', size: '~200MB' },
+                    { res: '720p', label: '720p (HD)', fps: '30fps', size: '~100MB' },
+                    { res: '480p', label: '480p (SD)', fps: '30fps', size: '~50MB' },
+                    { res: '360p', label: '360p', fps: '30fps', size: '~30MB' },
+                    { res: '240p', label: '240p', fps: '30fps', size: '~20MB' },
+                    { res: '144p', label: '144p', fps: '30fps', size: '~10MB' }
+                ];
+                
+                qualities.forEach(quality => {
+                    const btn = document.createElement('button');
+                    btn.className = 'quality-btn bg-gray-200 hover:bg-gray-300 px-2 py-1 md:px-4 md:py-2 rounded flex items-center text-xs md:text-sm';
+                    btn.innerHTML = `
+                        <span class="font-medium">${quality.label}</span>
+                        <span class="text-xs text-gray-500 ml-1 md:ml-2">${quality.size}</span>
+                    `;
+                    btn.dataset.quality = quality.res;
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.quality-btn').forEach(b => b.classList.remove('bg-purple-600', 'text-white'));
+                        document.querySelectorAll('.quality-btn').forEach(b => b.classList.add('bg-gray-200', 'hover:bg-gray-300'));
+                        this.classList.add('bg-purple-600', 'text-white');
+                        this.classList.remove('bg-gray-200', 'hover:bg-gray-300');
+                    });
+                    qualityContainer.appendChild(btn);
+                });
+                
+                // Select first quality by default
+                const firstQualityBtn = qualityContainer.querySelector('.quality-btn');
+                if (firstQualityBtn) {
+                    firstQualityBtn.click();
+                }
+            } else if (format === 'MP3') {
+                const qualities = [
+                    { bitrate: '320kbps', label: 'High Quality', size: '~10MB' },
+                    { bitrate: '256kbps', label: 'Medium Quality', size: '~8MB' },
+                    { bitrate: '192kbps', label: 'Standard Quality', size: '~6MB' },
+                    { bitrate: '128kbps', label: 'Basic Quality', size: '~4MB' }
+                ];
+                
+                qualities.forEach(quality => {
+                    const btn = document.createElement('button');
+                    btn.className = 'quality-btn bg-gray-200 hover:bg-gray-300 px-2 py-1 md:px-4 md:py-2 rounded flex items-center text-xs md:text-sm';
+                    btn.innerHTML = `
+                        <span class="font-medium">${quality.bitrate}</span>
+                        <span class="text-xs text-gray-500 ml-1 md:ml-2">${quality.size}</span>
+                    `;
+                    btn.dataset.quality = quality.bitrate;
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.quality-btn').forEach(b => b.classList.remove('bg-purple-600', 'text-white'));
+                        document.querySelectorAll('.quality-btn').forEach(b => b.classList.add('bg-gray-200', 'hover:bg-gray-300'));
+                        this.classList.add('bg-purple-600', 'text-white');
+                        this.classList.remove('bg-gray-200', 'hover:bg-gray-300');
+                    });
+                    qualityContainer.appendChild(btn);
+                });
+                
+                // Select first quality by default
+                const firstQualityBtn = qualityContainer.querySelector('.quality-btn');
+                if (firstQualityBtn) {
+                    firstQualityBtn.click();
+                }
+            } else {
+                // For other formats (WEBM, M4A)
+                const btn = document.createElement('button');
+                btn.className = 'quality-btn bg-purple-600 text-white px-3 py-1 md:px-4 md:py-2 rounded text-xs md:text-sm';
+                btn.textContent = 'Best Available Quality';
+                btn.dataset.quality = 'best';
+                qualityContainer.appendChild(btn);
+            }
+        }
+
+        // FAQ accordion functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                const icon = this.querySelector('i');
+                
+                // Toggle answer visibility
+                answer.classList.toggle('hidden');
+                
+                // Rotate icon
+                if (answer.classList.contains('hidden')) {
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+
+        // Main download button functionality
+        document.getElementById('download-btn').addEventListener('click', function() {
+            const videoUrl = document.getElementById('video-url').value.trim();
+            
+            if (!videoUrl) {
+                alert('Please enter a valid video URL');
+                return;
+            }
+            
+            // Show loading modal
+            document.getElementById('loading-modal').classList.remove('hidden');
+            
+            // Simulate API call with timeout
+            setTimeout(() => {
+                // Hide loading modal
+                document.getElementById('loading-modal').classList.add('hidden');
+                
+                // Show results section
+                document.getElementById('results-section').classList.remove('hidden');
+                
+                // Scroll to results
+                document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+                
+                // Set default format to MP4 and update quality options
+                document.querySelector('.format-btn').click();
+                
+                // Update video title based on URL (simulated)
+                if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                    document.getElementById('video-title').textContent = 'Never Gonna Give You Up - Rick Astley';
+                    document.getElementById('video-thumbnail').src = 'https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg';
+                } else if (videoUrl.includes('instagram.com')) {
+                    document.getElementById('video-title').textContent = 'Instagram Video/Reel';
+                    document.getElementById('video-thumbnail').src = 'https://cdn-icons-png.flaticon.com/512/2111/2111463.png';
+                } else if (videoUrl.includes('facebook.com')) {
+                    document.getElementById('video-title').textContent = 'Facebook Video';
+                    document.getElementById('video-thumbnail').src = 'https://cdn-icons-png.flaticon.com/512/124/124010.png';
+                } else if (videoUrl.includes('tiktok.com')) {
+                    document.getElementById('video-title').textContent = 'TikTok Video';
+                    document.getElementById('video-thumbnail').src = 'https://cdn-icons-png.flaticon.com/512/3046/3046126.png';
+                } else if (videoUrl.includes('twitter.com') || videoUrl.includes('x.com')) {
+                    document.getElementById('video-title').textContent = 'Twitter/X Video';
+                    document.getElementById('video-thumbnail').src = 'https://cdn-icons-png.flaticon.com/512/733/733579.png';
+                }
+            }, 1500);
+        });
+
+        // Final download button functionality
+        document.getElementById('final-download-btn').addEventListener('click', function() {
+            alert('Download started! (This is a demo. In a real app, the download would begin now.)');
+        });
+
+        // Initialize quality options for MP4 by default
+        document.addEventListener('DOMContentLoaded', function() {
+            updateQualityOptions('MP4');
+        });
+    </script>
+</body>
+</html>
